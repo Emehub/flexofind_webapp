@@ -657,7 +657,7 @@ def render_sidebar(df: pd.DataFrame) -> dict:
         if method == "Address Search":
             address = st.text_input(
                 "Search Address",
-                placeholder="e.g., 233 S Wacker Dr, Chicago, IL",
+                placeholder="e.g., Labone, Accra, Ghana",
                 help="Geocoded via OpenStreetMap Nominatim (free, rate-limited).",
             )
             if st.button("Find Location", use_container_width=True):
