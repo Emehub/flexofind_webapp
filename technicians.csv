@@ -1,0 +1,16 @@
+Tech_ID,Name,Phone,Specialty,Latitude,Longitude,Status
+TECH-001,Kofi Mensah,0244-123456,Phone Repairs,5.55503,-0.18641,Available
+TECH-002,Ama Boateng,0504-234567,Plumbing Services,5.6368,-0.1468,On-Site
+TECH-003,Kwame Asante,0244-345678,Mechanic Services,5.6167,-0.2333,Available
+TECH-004,Abena Owusu,0201-456789,Laptop Repairs,5.685,-0.1663,Off-Duty
+TECH-005,Yaw Adjei,0244-567890,Plumbing Services,5.5452,-0.2595,Available
+TECH-006,Akosua Darko,0277-678901,Mechanic Services,5.6698,0.0166,On-Site
+TECH-008,Efua Amponsah,0504-890123,Plumbing Services,5.5623,-0.2073,Off-Duty
+TECH-009,Kwesi Ofori,0244-901234,Phone Repairs,5.6147,-0.1169,Available
+TECH-010,Adwoa Kyei,0201-012345,Laptop Repairs,5.5667,-0.1736,On-Site
+TECH-011,Nii Laryea,0277-111222,Carpentry Works,5.5935,-0.2285,Available
+TECH-012,Akua Sarpong,0244-222333,Plumbing Services,5.6156,-0.2489,Off-Duty
+TECH-013,Fiifi Acheampong,0504-333444,Mechanic Services,5.5875,-0.2002,Available
+TECH-014,Maame Agyei,0277-444555,Laptop Repairs,5.5773,-0.1875,On-Site
+TECH-015,Ato Quansah,0244-555666,Carpentry Works,5.5564,-0.1563,Available
+TECH-016,Kweku,0552824699,Carpentry Works,5.628826,-0.090199,Available
