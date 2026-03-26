@@ -907,5 +907,39 @@ def main() -> None:
             render_map(result, req_lat, req_lon, ui["req_label"])
 
 
-if __name__ == "__main__":
+# ─── Password Gate ────────────────────────────────────────────────────────────
+def check_password() -> bool:
+    """Return True only after the correct password has been entered."""
+    if st.session_state.get("authenticated"):
+        return True
+
+    logo_b64 = _logo_base64()
+    st.markdown(
+        f"""
+        <div style="text-align:center; padding: 3rem 1rem 1rem;">
+            <img src="data:image/jpeg;base64,{logo_b64}"
+                 style="height:90px; width:90px; border-radius:50%;
+                        object-fit:cover; margin-bottom:1rem;" />
+            <h2 style="margin:0;">FlexoFind Admin</h2>
+            <p style="color:#8892a4; margin-top:0.3rem;">Enter your password to continue</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        pwd = st.text_input("Password", type="password", label_visibility="collapsed",
+                            placeholder="Enter password")
+        if st.button("Login", use_container_width=True):
+            correct = st.secrets.get("APP_PASSWORD", "flexofind2026")
+            if pwd == correct:
+                st.session_state["authenticated"] = True
+                st.rerun()
+            else:
+                st.error("Incorrect password. Please try again.")
+    return False
+
+
+if check_password():
     main()
