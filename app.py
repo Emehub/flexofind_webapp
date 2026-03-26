@@ -365,6 +365,8 @@ def enrich_with_distances(
         ),
         axis=1,
     )
+    # Convert km → estimated travel minutes at 30 km/h city speed
+    df["Travel_min"] = (df["Distance_km"] / 30 * 60).round(0).astype(int)
     return df.sort_values("Distance_km").reset_index(drop=True)
 
 
@@ -379,7 +381,7 @@ def apply_filters(
         df = df[df["Specialty"] == specialty]
     if statuses:
         df = df[df["Status"].isin(statuses)]
-    df = df[df["Distance_km"] <= max_km]
+    df = df[df["Distance_km"] <= max_km * 30 / 60]  # max_km is now max_min
     return df.reset_index(drop=True)
 
 
@@ -437,14 +439,14 @@ def _style_status_cell(val: object) -> str:
 
 def render_styled_table(df: pd.DataFrame, t: dict) -> None:
     """Render the technician results table with colour-coded Status column."""
-    display = df[["Tech_ID", "Name", "Phone", "Specialty", "Status", "Distance_km"]].copy()
-    display.columns = ["ID", "Name", "Phone", "Specialty", "Status", "Distance (km)"]
+    display = df[["Tech_ID", "Name", "Phone", "Specialty", "Status", "Travel_min"]].copy()
+    display.columns = ["ID", "Name", "Phone", "Specialty", "Status", "ETA (min)"]
     display.index = pd.RangeIndex(1, len(display) + 1)
 
     styled = (
         display.style
         .map(_style_status_cell, subset=["Status"])
-        .format({"Distance (km)": "{:.2f} km"})
+        .format({"ETA (min)": "{} min"})
         .set_properties(**{
             "background-color": t["card_bg"],
             "border-color":     t["border"],
@@ -712,7 +714,7 @@ def render_sidebar(df: pd.DataFrame) -> dict:
         )
 
         state["max_km"] = float(
-            st.slider("Max Distance (km)", min_value=1, max_value=200, value=100, step=1)
+            st.slider("Max Travel Time (min)", min_value=5, max_value=120, value=60, step=5)
         )
 
         st.markdown("---")
@@ -779,7 +781,7 @@ def render_no_location_placeholder(df: pd.DataFrame) -> None:
 def render_metrics(result_df: pd.DataFrame, req_lat: float, req_lon: float) -> None:
     in_range = len(result_df)
     avail    = (result_df["Status"] == "Available").sum()
-    nearest  = f"{result_df['Distance_km'].min():.2f} km" if in_range else "—"
+    nearest  = f"{int(result_df['Travel_min'].min())} min" if in_range else "—"
 
     st.markdown(
         f"""
@@ -821,7 +823,7 @@ def render_closest_banner(row: pd.Series, t: dict) -> None:
                 <span style="color:{status_color}; font-weight:600;">{row["Status"]}</span>
                 &nbsp;&middot;&nbsp;
                 <span style="color:{t['accent']}; font-weight:700;">
-                    {row["Distance_km"]:.2f} km away
+                    {int(row['Travel_min'])} min away
                 </span>
             </div>
         </div>
@@ -891,8 +893,8 @@ def main() -> None:
         if len(result) == 0:
             st.warning(
                 "No technicians match the current filters within "
-                f"**{ui['max_km']} km**. Try adjusting the filters or increasing "
-                "the max distance."
+                f"**{ui['max_km']} min**. Try adjusting the filters or increasing "
+                "the max travel time."
             )
         else:
             render_styled_table(result, t)
